@@ -99,7 +99,13 @@ def main(script_args, training_args, model_args):
 
         prompt.append({"role": "user", "content": example[prompt_column]})
         return {"prompt": prompt}
+    # filter samples
+    def filter_samples(example):
+        user_content = example[script_args.dataset_prompt_column]
+        input_ids = tokenizer(user_content)['input_ids']
+        return len(input_ids) <= training_args.max_prompt_length
 
+    dataset = dataset.filter(filter_samples)
     dataset = dataset.map(make_conversation)
 
     for split in dataset:

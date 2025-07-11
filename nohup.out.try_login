@@ -1,0 +1,262 @@
+[2025-07-11 13:59:22,816] [INFO] [real_accelerator.py:239:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+W0711 13:59:24.577000 3373911 site-packages/torch/distributed/run.py:792] 
+W0711 13:59:24.577000 3373911 site-packages/torch/distributed/run.py:792] *****************************************
+W0711 13:59:24.577000 3373911 site-packages/torch/distributed/run.py:792] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0711 13:59:24.577000 3373911 site-packages/torch/distributed/run.py:792] *****************************************
+INFO 07-11 13:59:28 [importing.py:53] Triton module has been replaced with a placeholder.
+INFO 07-11 13:59:28 [__init__.py:239] Automatically detected platform cuda.
+INFO 07-11 13:59:28 [importing.py:53] Triton module has been replaced with a placeholder.
+INFO 07-11 13:59:29 [__init__.py:239] Automatically detected platform cuda.
+[2025-07-11 13:59:30,274] [INFO] [real_accelerator.py:239:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2025-07-11 13:59:30,642] [INFO] [real_accelerator.py:239:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2025-07-11 13:59:31,314] [INFO] [comm.py:669:init_distributed] cdb=None
+[2025-07-11 13:59:31,314] [INFO] [comm.py:700:init_distributed] Initializing TorchBackend in DeepSpeed with backend nccl
+2025-07-11 13:59:31 - WARNING - __main__ - Process rank: 0, device: cuda:0, n_gpu: 1 distributed training: True, 16-bits training: False
+2025-07-11 13:59:31 - INFO - __main__ - Model parameters ModelConfig(model_name_or_path='/home/fuzhizhang.fzz/model/Qwen2.5-3B', model_revision='main', torch_dtype='bfloat16', trust_remote_code=False, attn_implementation='flash_attention_2', use_peft=False, lora_r=16, lora_alpha=32, lora_dropout=0.05, lora_target_modules=None, lora_modules_to_save=None, lora_task_type='CAUSAL_LM', use_rslora=False, use_dora=False, load_in_8bit=False, load_in_4bit=False, bnb_4bit_quant_type='nf4', use_bnb_nested_quant=False)
+2025-07-11 13:59:31 - INFO - __main__ - Script parameters GRPOScriptArguments(dataset_name='/home/fuzhizhang.fzz/data/OpenR1-Math-220k', dataset_config=None, dataset_train_split='train', dataset_test_split='test', gradient_checkpointing_use_reentrant=False, ignore_bias_buffers=False, dataset_mixture=None, reward_funcs=['accuracy', 'format', 'tag_count'], cosine_min_value_wrong=0.0, cosine_max_value_wrong=-0.5, cosine_min_value_correct=0.5, cosine_max_value_correct=1.0, cosine_max_len=1000, repetition_n_grams=3, repetition_max_penalty=-1.0, code_language='python', code_eval_test_batch_size=1, code_eval_scoring_mode='weighted_sum', parallel_code_exec_per_proc=2, dataset_prompt_column='problem', e2b_router_url=None, morph_router_url=None, code_provider='e2b', ioi_provider='piston', max_completion_len=16384, soft_punish_cache=4096)
+2025-07-11 13:59:31 - INFO - __main__ - Training parameters GRPOConfig(
+_n_gpu=1,
+accelerator_config={'split_batches': False, 'dispatch_batches': None, 'even_batches': True, 'use_seedable_sampler': True, 'non_blocking': False, 'gradient_accumulation_kwargs': None, 'use_configured_state': False},
+adafactor=False,
+adam_beta1=0.9,
+adam_beta2=0.999,
+adam_epsilon=1e-08,
+auto_find_batch_size=False,
+average_tokens_across_devices=False,
+batch_eval_metrics=False,
+benchmarks=[],
+beta=0.04,
+bf16=True,
+bf16_full_eval=False,
+cache_implementation=None,
+callbacks=[],
+chat_template={% if not add_generation_prompt is defined %}{% set add_generation_prompt = false %}{% endif %}{% set ns = namespace(is_first=false, is_tool=false, is_output_first=true, system_prompt='') %}{%- for message in messages %}{%- if message['role'] == 'system' %}{% set ns.system_prompt = message['content'] %}{%- endif %}{%- endfor %}{{bos_token}}{{ns.system_prompt}}{%- for message in messages %}{%- if message['role'] == 'user' %}{%- set ns.is_tool = false -%}{{'<｜User｜>' + message['content']}}{%- endif %}{%- if message['role'] == 'assistant' and message['content'] is none %}{%- set ns.is_tool = false -%}{%- for tool in message['tool_calls']%}{%- if not ns.is_first %}{{'<｜Assistant｜><｜tool▁calls▁begin｜><｜tool▁call▁begin｜>' + tool['type'] + '<｜tool▁sep｜>' + tool['function']['name'] + '\n' + '```json' + '\n' + tool['function']['arguments'] + '\n' + '```' + '<｜tool▁call▁end｜>'}}{%- set ns.is_first = true -%}{%- else %}{{'\n' + '<｜tool▁call▁begin｜>' + tool['type'] + '<｜tool▁sep｜>' + tool['function']['name'] + '\n' + '```json' + '\n' + tool['function']['arguments'] + '\n' + '```' + '<｜tool▁call▁end｜>'}}{{'<｜tool▁calls▁end｜><｜end▁of▁sentence｜>'}}{%- endif %}{%- endfor %}{%- endif %}{%- if message['role'] == 'assistant' and message['content'] is not none %}{%- if ns.is_tool %}{{'<｜tool▁outputs▁end｜>' + message['content'] + '<｜end▁of▁sentence｜>'}}{%- set ns.is_tool = false -%}{%- else %}{% set content = message['content'] %}{{'<｜Assistant｜>' + content + '<｜end▁of▁sentence｜>'}}{%- endif %}{%- endif %}{%- if message['role'] == 'tool' %}{%- set ns.is_tool = true -%}{%- if ns.is_output_first %}{{'<｜tool▁outputs▁begin｜><｜tool▁output▁begin｜>' + message['content'] + '<｜tool▁output▁end｜>'}}{%- set ns.is_output_first = false %}{%- else %}{{'\n<｜tool▁output▁begin｜>' + message['content'] + '<｜tool▁output▁end｜>'}}{%- endif %}{%- endif %}{%- endfor -%}{% if ns.is_tool %}{{'<｜tool▁outputs▁end｜>'}}{% endif %}{% if add_generation_prompt and not ns.is_tool %}{{'<｜Assistant｜>'}}{% endif %},
+data_seed=None,
+dataloader_drop_last=False,
+dataloader_num_workers=0,
+dataloader_persistent_workers=False,
+dataloader_pin_memory=True,
+dataloader_prefetch_factor=None,
+ddp_backend=None,
+ddp_broadcast_buffers=None,
+ddp_bucket_cap_mb=None,
+ddp_find_unused_parameters=None,
+ddp_timeout=1800,
+debug=[],
+deepspeed=None,
+delta=None,
+disable_dropout=False,
+disable_tqdm=False,
+do_eval=False,
+do_predict=False,
+do_train=False,
+ds3_gather_for_generation=True,
+epsilon=0.2,
+epsilon_high=None,
+eval_accumulation_steps=None,
+eval_delay=0,
+eval_do_concat_batches=True,
+eval_on_start=False,
+eval_steps=None,
+eval_strategy=IntervalStrategy.NO,
+eval_use_gather_object=False,
+fp16=False,
+fp16_backend=auto,
+fp16_full_eval=False,
+fp16_opt_level=O1,
+fsdp=[],
+fsdp_config={'min_num_params': 0, 'xla': False, 'xla_fsdp_v2': False, 'xla_fsdp_grad_ckpt': False},
+fsdp_min_num_params=0,
+fsdp_transformer_layer_cls_to_wrap=None,
+full_determinism=False,
+generation_batch_size=64,
+gradient_accumulation_steps=4,
+gradient_checkpointing=True,
+gradient_checkpointing_kwargs={'use_reentrant': False},
+greater_is_better=None,
+group_by_length=False,
+half_precision_backend=auto,
+hub_always_push=False,
+hub_model_id=Qwen2.5-3B-GRPO,
+hub_model_revision=main,
+hub_private_repo=None,
+hub_strategy=HubStrategy.EVERY_SAVE,
+hub_token=<HUB_TOKEN>,
+ignore_data_skip=False,
+include_for_metrics=[],
+include_inputs_for_metrics=False,
+include_num_input_tokens_seen=False,
+include_tokens_per_second=False,
+jit_mode_eval=False,
+label_names=None,
+label_smoothing_factor=0.0,
+learning_rate=1e-06,
+length_column_name=length,
+load_best_model_at_end=False,
+local_rank=0,
+log_completions=True,
+log_level=info,
+log_level_replica=warning,
+log_on_each_node=True,
+logging_dir=data/Qwen2.5-3B-GRPO/runs/Jul11_13-59-30_nv-h100-030,
+logging_first_step=True,
+logging_nan_inf_filter=True,
+logging_steps=1,
+logging_strategy=IntervalStrategy.STEPS,
+loss_type=bnpo,
+lr_scheduler_kwargs={'min_lr_rate': 0.1},
+lr_scheduler_type=SchedulerType.COSINE_WITH_MIN_LR,
+mask_truncated_completions=False,
+max_completion_length=2024,
+max_grad_norm=1.0,
+max_prompt_length=512,
+max_steps=-1,
+metric_for_best_model=None,
+min_p=None,
+model_init_kwargs=None,
+mp_parameters=,
+neftune_noise_alpha=None,
+no_cuda=False,
+num_completions_to_print=0,
+num_generations=8,
+num_iterations=1,
+num_train_epochs=1,
+optim=OptimizerNames.ADAMW_TORCH,
+optim_args=None,
+optim_target_modules=None,
+output_dir=data/Qwen2.5-3B-GRPO,
+overwrite_hub_revision=False,
+overwrite_output_dir=True,
+past_index=-1,
+per_device_eval_batch_size=8,
+per_device_train_batch_size=8,
+prediction_loss_only=False,
+push_to_hub=True,
+push_to_hub_model_id=None,
+push_to_hub_organization=None,
+push_to_hub_revision=False,
+push_to_hub_token=<PUSH_TO_HUB_TOKEN>,
+ray_scope=last,
+ref_model_mixup_alpha=0.6,
+ref_model_sync_steps=512,
+remove_unused_columns=False,
+repetition_penalty=1.0,
+report_to=['wandb'],
+restore_callback_states_from_checkpoint=False,
+resume_from_checkpoint=None,
+reward_weights=[1.0, 1.0, 1.0],
+run_name=Qwen2.5-3B-GRPO,
+save_on_each_node=False,
+save_only_model=False,
+save_safetensors=True,
+save_steps=500,
+save_strategy=SaveStrategy.EPOCH,
+save_total_limit=1,
+scale_rewards=True,
+seed=42,
+shuffle_dataset=True,
+skip_memory_metrics=True,
+steps_per_generation=4,
+sync_ref_model=False,
+system_prompt=You are a helpful AI Assistant that provides well-reasoned and detailed responses. You first think about the reasoning process as an internal monologue and then provide the user with the answer. Respond in the following format: <think>
+...
+</think>
+<answer>
+...
+</answer>,
+temperature=0.7,
+tf32=None,
+top_k=None,
+top_p=1.0,
+torch_compile=False,
+torch_compile_backend=None,
+torch_compile_mode=None,
+torch_empty_cache_steps=None,
+torchdynamo=None,
+tpu_metrics_debug=False,
+tpu_num_cores=None,
+use_cpu=False,
+use_ipex=False,
+use_legacy_prediction_loop=False,
+use_liger_kernel=True,
+use_liger_loss=False,
+use_mps_device=False,
+use_vllm=True,
+vllm_gpu_memory_utilization=0.3,
+vllm_guided_decoding_regex=None,
+vllm_mode=colocate,
+vllm_server_base_url=None,
+vllm_server_host=0.0.0.0,
+vllm_server_port=8000,
+vllm_server_timeout=240.0,
+vllm_tensor_parallel_size=1,
+wandb_entity=fuzhizhang-fzz-westlake-university,
+wandb_log_unique_prompts=True,
+wandb_project=try_openr1_qwen2.5_3b,
+wandb_run_group=None,
+warmup_ratio=0.1,
+warmup_steps=0,
+weight_decay=0.0,
+)
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/home/fuzhizhang.fzz/open-r1/src/open_r1/grpo.py", line 187, in <module>
+[rank0]:     main(script_args, training_args, model_args)
+[rank0]:   File "/home/fuzhizhang.fzz/open-r1/src/open_r1/grpo.py", line 74, in main
+[rank0]:     dataset = get_dataset(script_args)
+[rank0]:               ^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/ssdwork/baogs/llm/open-r1/src/open_r1/utils/data.py", line 24, in get_dataset
+[rank0]:     return datasets.load_from_disk(args.dataset_name)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/ssdwork/baogs/anaconda3/envs/r1/lib/python3.12/site-packages/datasets/load.py", line 2148, in load_from_disk
+[rank0]:     raise FileNotFoundError(
+[rank0]: FileNotFoundError: Directory /home/fuzhizhang.fzz/data/OpenR1-Math-220k is neither a `Dataset` directory nor a `DatasetDict` directory.
+[2025-07-11 13:59:31,772] [INFO] [comm.py:669:init_distributed] cdb=None
+[rank0]:[W711 13:59:31.815860777 ProcessGroupNCCL.cpp:1496] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+2025-07-11 13:59:32 - WARNING - __main__ - Process rank: 1, device: cuda:1, n_gpu: 1 distributed training: True, 16-bits training: False
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/home/fuzhizhang.fzz/open-r1/src/open_r1/grpo.py", line 187, in <module>
+[rank1]:     main(script_args, training_args, model_args)
+[rank1]:   File "/home/fuzhizhang.fzz/open-r1/src/open_r1/grpo.py", line 74, in main
+[rank1]:     dataset = get_dataset(script_args)
+[rank1]:               ^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/ssdwork/baogs/llm/open-r1/src/open_r1/utils/data.py", line 24, in get_dataset
+[rank1]:     return datasets.load_from_disk(args.dataset_name)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/ssdwork/baogs/anaconda3/envs/r1/lib/python3.12/site-packages/datasets/load.py", line 2148, in load_from_disk
+[rank1]:     raise FileNotFoundError(
+[rank1]: FileNotFoundError: Directory /home/fuzhizhang.fzz/data/OpenR1-Math-220k is neither a `Dataset` directory nor a `DatasetDict` directory.
+W0711 13:59:32.596000 3373911 site-packages/torch/distributed/elastic/multiprocessing/api.py:897] Sending process 3374152 closing signal SIGTERM
+E0711 13:59:32.961000 3373911 site-packages/torch/distributed/elastic/multiprocessing/api.py:869] failed (exitcode: 1) local_rank: 0 (pid: 3374151) of binary: /ssdwork/baogs/anaconda3/envs/r1/bin/python3
+Traceback (most recent call last):
+  File "/workspace/anaconda3/envs/fzz_openr1/bin/accelerate", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/ssdwork/baogs/anaconda3/envs/r1/lib/python3.12/site-packages/accelerate/commands/accelerate_cli.py", line 48, in main
+    args.func(args)
+  File "/ssdwork/baogs/anaconda3/envs/r1/lib/python3.12/site-packages/accelerate/commands/launch.py", line 1182, in launch_command
+    deepspeed_launcher(args)
+  File "/ssdwork/baogs/anaconda3/envs/r1/lib/python3.12/site-packages/accelerate/commands/launch.py", line 861, in deepspeed_launcher
+    distrib_run.run(args)
+  File "/ssdwork/baogs/anaconda3/envs/r1/lib/python3.12/site-packages/torch/distributed/run.py", line 909, in run
+    elastic_launch(
+  File "/ssdwork/baogs/anaconda3/envs/r1/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 138, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/ssdwork/baogs/anaconda3/envs/r1/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 269, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+src/open_r1/grpo.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2025-07-11_13:59:32
+  host      : nv-h100-030.ngpu.com
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 3374151)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
